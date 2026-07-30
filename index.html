@@ -883,7 +883,7 @@ const GEMMA_MODEL = 'gemma-4-26b-a4b-it'; // confirmed working with the Gemini A
 // control; rotate/delete the key afterward, and never hardcode a real
 // production key this way.
 // ============================================================
-const HARDCODED_GEMINI_KEY = "AQ.Ab8RN6LRDis9xLzw6KjkGMQ7ZLSp6DUPA9q-Mu8kG9jjz5CS2w";
+const HARDCODED_GEMINI_KEY = "AQ.Ab8RN6Kd5vdHAYXIZr_PJQGr4EvpWYZJJHcRQPI_DLKl9v2qYw";
 
 if(HARDCODED_GEMINI_KEY && !localStorage.getItem(LS_GEMINI_KEY)){
   localStorage.setItem(LS_GEMINI_KEY, HARDCODED_GEMINI_KEY);
@@ -963,10 +963,13 @@ async function sendChatMessage(){
       .map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
 
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMMA_MODEL}:generateContent?key=${encodeURIComponent(key)}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMMA_MODEL}:generateContent`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': key
+        },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
           generationConfig: { thinkingConfig: { thinkingLevel: 'MINIMAL' } },
